@@ -36,7 +36,7 @@ void setStoneLikeDiggingProperties(DiggingPropertiesList &list, float toughness)
 void setDirtLikeDiggingProperties(DiggingPropertiesList &list, float toughness);
 void setWoodLikeDiggingProperties(DiggingPropertiesList &list, float toughness);
 
-content_t trans_table_19[21][2] = {
+content_t trans_table_19[23][2] = {
 	{CONTENT_GRASS, 1},
 	{CONTENT_TREE, 4},
 	{CONTENT_LEAVES, 5},
@@ -58,6 +58,8 @@ content_t trans_table_19[21][2] = {
 	{CONTENT_CLAY, 27},
 	{CONTENT_PAPYRUS, 28},
 	{CONTENT_BOOKSHELF, 29},
+    {CONTENT_WATERMELON, 31},
+    {CONTENT_WATERMELON_VINE, 32},
 };
 
 MapNode mapnode_translate_from_internal(MapNode n_from, u8 version)
@@ -250,6 +252,28 @@ void content_mapnode_init()
 	f->is_ground_content = true;
 	f->dug_item = std::string("MaterialItem2 ")+itos(i)+" 1";
 	setWoodLikeDiggingProperties(f->digging_properties, 0.75);
+
+    i = CONTENT_WATERMELON;
+    f = &content_features(i);
+    f->setAllTextures("watermelon_side.png");
+    f->setTexture(0, "watermelon_top.png");
+    f->setTexture(1, "watermelon_bottom.png");
+    f->setInventoryTextureCube("watermelon_top.png", "watermelon_side.png", "watermelon_side.png");
+    f->param_type = CPT_MINERAL;
+    f->is_ground_content = true;
+    f->dug_item = std::string("MaterialItem2 ")+itos(i)+" 1";
+    setWoodLikeDiggingProperties(f->digging_properties, 0.50);
+
+    i = CONTENT_WATERMELON_VINE;
+    f = &content_features(i);
+    f->setInventoryTexture("watermelon_vine.png");
+    f->light_propagates = true;
+    f->param_type = CPT_LIGHT;
+    f->is_ground_content = true;
+    f->solidness = 0;
+    f->walkable = false; // Is possible to go through
+    f->dug_item = std::string("MaterialItem2 ")+itos(i)+" 1";
+    setWoodLikeDiggingProperties(f->digging_properties, 0.10);
 
 	i = CONTENT_PAPYRUS;
 	f = &content_features(i);
