@@ -71,6 +71,10 @@ std::string item_craft_get_image_name(const std::string &subname)
 		return "scorched_stuff.png";
 	else if(subname == "firefly")
 		return "firefly.png";
+    else if(subname == "watermelon_slice")
+        return "watermelon_slice.png";
+    else if(subname == "watermelon_seed")
+        return "watermelon_seed.png";
 	else
 		return "cloud.png"; // just something
 }
@@ -126,6 +130,8 @@ bool item_craft_is_eatable(const std::string &subname)
 {
 	if(subname == "cooked_rat")
 		return true;
+    else if(subname == "watermelon_slice")
+        return true;
 	return false;
 }
 
@@ -133,6 +139,8 @@ s16 item_craft_eat_hp_change(const std::string &subname)
 {
 	if(subname == "cooked_rat")
 		return 6; // 3 hearts
+    else if(subname == "watermelon_slice")
+        return 1; // 0.5 hearts
 	return 0;
 }
 

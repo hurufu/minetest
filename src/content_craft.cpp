@@ -429,6 +429,26 @@ InventoryItem *craft_get_result(InventoryItem **items)
 		}
 	}
 
+	// Watermelon slice
+    {
+        ItemSpec specs[9];
+        specs[0] = ItemSpec(ITEM_MATERIAL, CONTENT_WATERMELON);
+        if(checkItemCombination(items, specs))
+        {
+            return new CraftItem("watermelon_slice", 6);
+        }
+    }
+
+    // Watermelon seeds
+    {
+        ItemSpec specs[9];
+        specs[0] = ItemSpec(ITEM_CRAFT, "watermelon_slice");
+        if(checkItemCombination(items, specs))
+        {
+            return new CraftItem("watermelon_seed", 1);
+        }
+    }
+
 	return NULL;
 }
 

@@ -529,7 +529,6 @@ void TextureSource::buildMainAtlas()
     sourcelist.push_back("watermelon_side.png");
     sourcelist.push_back("watermelon_top.png");
     sourcelist.push_back("watermelon_bottom.png");
-    sourcelist.push_back("watermelon_vine.png");
 	
 	sourcelist.push_back("stone.png^mineral_coal.png");
 	sourcelist.push_back("stone.png^mineral_iron.png");
