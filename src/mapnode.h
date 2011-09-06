@@ -499,6 +499,13 @@ struct MapNode
 				&& param1 == other.param1
 				&& param2 == other.param2);
 	}
+
+	bool operator!=(const MapNode &other)
+    {
+        return (param0 != other.param0
+                || param1 != other.param1
+                || param2 != other.param2);
+    }
 	
 	// To be used everywhere
 	content_t getContent()

@@ -266,6 +266,52 @@ void make_cactus(VoxelManipulator &vmanip, v3s16 p0)
 	}
 }
 
+void make_watermelon(VoxelManipulator &vmanip, v3s16 p0)
+{
+    MapNode watermelonnode(CONTENT_WATERMELON);
+    MapNode watermelonvinenode(CONTENT_WATERMELON_VINE);
+
+    s16 vine_length = myrand_range(3, 9);
+    v3s16 p1 = p0;
+    for(s16 i=0; i<vine_length; i++)
+    {
+        // Randomly chooses the direction to grow to
+        s16 xdir = myrand_range(-1, 1);
+        s16 zdir = 0;
+        s16 ydir = 0;
+        if(!xdir)
+            zdir = myrand_range(-1, 1);
+        p1 += v3s16(xdir, ydir, zdir);
+        // Checks if there is a hill (!=CONTENT_AIR) and increases or
+        // decreases Y coordinate. It was made to avoid flying watermelons
+        if(vmanip.m_data[vmanip.m_area.index(p1+v3s16(0, -1, 0))] == CONTENT_AIR &&
+                vmanip.m_data[vmanip.m_area.index(p1+v3s16(0, -2, 0))] != CONTENT_AIR)
+        {
+            ydir = -1;
+            //dstream<<"ydir: "<<ydir<<std::endl;
+        }
+        else if(vmanip.m_data[vmanip.m_area.index(p1+v3s16(0, 1, 0))] == CONTENT_AIR &&
+                vmanip.m_data[vmanip.m_area.index(p1)] != CONTENT_AIR)
+        {
+            ydir = 1;
+            //dstream<<"ydir: "<<ydir<<std::endl;
+        }
+        else if(vmanip.m_data[vmanip.m_area.index(p1)] == CONTENT_AIR)
+        {
+            ydir = 0;
+            //dstream<<"ydir: "<<ydir<<std::endl;
+        }
+        else
+            break;
+        p1.Y += ydir;
+        if(vmanip.m_area.contains(p1))
+            vmanip.m_data[vmanip.m_area.index(p1)] = watermelonvinenode;
+       if(!myrand_range(0, 2)) // grow berry
+           if(vmanip.m_area.contains(p1+v3s16(xdir, 0, zdir)))
+               vmanip.m_data[vmanip.m_area.index(p1)] = watermelonnode;
+    }
+}
+
 #if 0
 static void make_randomstone(VoxelManipulator &vmanip, v3s16 p0)
 {
@@ -2072,6 +2118,8 @@ void make_block(BlockMakeData *data)
 		u32 tree_count = block_area_nodes * tree_amount_2d(data->seed, p2d_center);
 		if(is_jungle)
 			tree_count *= 5;
+        // Watermelon stuff
+        bool is_watermelon_paradise = surface_humidity > 0.2 && surface_humidity < 0.3;
 
 		/*
 			Add trees
@@ -2123,6 +2171,12 @@ void make_block(BlockMakeData *data)
 					p.Y++;
 					make_papyrus(vmanip, p);
 				}
+				// Watermelons don't grow on stones and under water
+                else if(is_watermelon_paradise && y > WATER_LEVEL + 2 && y < WATER_LEVEL + 6)
+                {
+                    p.Y++;
+                    make_watermelon(vmanip, p);
+                }
 				// Trees grow only on mud and grass, on land
 				else if((n->getContent() == CONTENT_MUD || n->getContent() == CONTENT_GRASS) && y > WATER_LEVEL + 2)
 				{

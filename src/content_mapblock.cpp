@@ -189,6 +189,16 @@ void mapblock_mesh_generate_special(MeshMakeData *data,
 			g_texturesource->getTextureId("papyrus.png"));
 	material_papyrus.setTexture(0, pa_papyrus.atlas);
 
+    // Watermelon vine material
+    video::SMaterial material_watermelonvine;
+    material_watermelonvine.setFlag(video::EMF_LIGHTING, false);
+    material_watermelonvine.setFlag(video::EMF_BILINEAR_FILTER, false);
+    material_watermelonvine.setFlag(video::EMF_FOG_ENABLE, true);
+    material_watermelonvine.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+    AtlasPointer pa_watermelonvine = g_texturesource->getTexture(
+            g_texturesource->getTextureId("watermelon_vine.png"));
+    material_watermelonvine.setTexture(0, pa_watermelonvine.atlas);
+
 	// junglegrass material
 	video::SMaterial material_junglegrass;
 	material_junglegrass.setFlag(video::EMF_LIGHTING, false);
@@ -1001,6 +1011,56 @@ void mapblock_mesh_generate_special(MeshMakeData *data,
 				collector.append(material_papyrus, vertices, 4, indices, 6);
 			}
 		}
+		else if(n.getContent() == CONTENT_WATERMELON_VINE)
+        {
+            u8 l = decode_light(undiminish_light(n.getLightBlend(data->m_daynight_ratio)));
+            video::SColor c = MapBlock_LightColor(255, l);
+
+            for(u32 j=0; j<4; j++)
+            {
+                video::S3DVertex vertices[4] =
+                {
+                    video::S3DVertex(-BS/2,-BS/2,0, 0,0,0, c,
+                            pa_watermelonvine.x0(), pa_watermelonvine.y1()),
+                    video::S3DVertex(BS/2,-BS/2,0, 0,0,0, c,
+                            pa_watermelonvine.x1(), pa_watermelonvine.y1()),
+                    video::S3DVertex(BS/2,BS/2,0, 0,0,0, c,
+                            pa_watermelonvine.x1(), pa_watermelonvine.y0()),
+                    video::S3DVertex(-BS/2,BS/2,0, 0,0,0, c,
+                            pa_watermelonvine.x0(), pa_watermelonvine.y0()),
+                };
+
+                if(j == 0)
+                {
+                    for(u16 i=0; i<4; i++)
+                        vertices[i].Pos.rotateXZBy(45);
+                }
+                else if(j == 1)
+                {
+                    for(u16 i=0; i<4; i++)
+                        vertices[i].Pos.rotateXZBy(-45);
+                }
+                else if(j == 2)
+                {
+                    for(u16 i=0; i<4; i++)
+                        vertices[i].Pos.rotateXZBy(135);
+                }
+                else if(j == 3)
+                {
+                    for(u16 i=0; i<4; i++)
+                        vertices[i].Pos.rotateXZBy(-135);
+                }
+
+                for(u16 i=0; i<4; i++)
+                {
+                    vertices[i].Pos += intToFloat(p + blockpos_nodes, BS);
+                }
+
+                u16 indices[] = {0,1,2,2,3,0};
+                // Add to mesh collector
+                collector.append(material_watermelonvine, vertices, 4, indices, 6);
+            }
+        }
 		else if(n.getContent() == CONTENT_JUNGLEGRASS)
 		{
 			u8 l = decode_light(undiminish_light(n.getLightBlend(data->m_daynight_ratio)));
