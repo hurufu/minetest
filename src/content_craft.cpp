@@ -449,6 +449,17 @@ InventoryItem *craft_get_result(InventoryItem **items)
         }
     }
 
+     // Watermelon sprout
+    {
+        ItemSpec specs[9];
+        specs[0] = ItemSpec(ITEM_CRAFT, "watermelon_seed");
+        specs[3] = ItemSpec(ITEM_MATERIAL, CONTENT_MUD);
+        if(checkItemCombination(items, specs))
+        {
+            return new MaterialItem(CONTENT_WATERMELON_SPROUT, 1);
+        }
+    }
+
 	return NULL;
 }
 

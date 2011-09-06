@@ -903,6 +903,72 @@ void ServerEnvironment::step(float dtime)
 					}
 				}
 				/*
+                 * Sprouts decay after growing
+                 */
+                if(n.getContent() == CONTENT_WATERMELON_SPROUT)
+                {
+                    MapNode n_top = block->getNodeNoEx(p0+v3s16(0,1,0));
+                    if(n_top.getContent() == CONTENT_WATERMELON_VINE
+                            || n_top.getContent() == CONTENT_WATERMELON_GROWING_VINE)
+                    {
+                        n.setContent(CONTENT_MUD);
+                        m_map->addNodeWithEvent(p, n);
+                    }
+                }
+                /*
+                 *  All watermelons growing stuff (yes, the grow from air)
+                 */
+                if(n.getContent() == CONTENT_AIR)
+                {
+                    MapNode n_bottom = block->getNodeNoEx(p0+v3s16(0, -1, 0));
+                    MapNode n_top = block->getNodeNoEx(p0+v3s16(0, 1, 0));
+                    if(n_bottom.getContent() == CONTENT_WATERMELON_SPROUT
+                            && n_top.getLightBlend(getDayNightRatio()) >= 12)
+                    {
+                        n.setContent(CONTENT_WATERMELON_GROWING_VINE);
+                        m_map->addNodeWithEvent(p, n);
+                    }
+                    else if(myrand_range(0, 1)) // will grow vine
+                    {
+                        s16 xdir = myrand_range(-1, 1);
+                        s16 zdir = myrand_range(-1, 1);
+                        MapNode n_side = block->getNodeNoEx(p0+v3s16(xdir,0,zdir));
+                        if(n_side.getContent() == CONTENT_WATERMELON_GROWING_VINE && (
+                                n_bottom.getContent() == CONTENT_MUD ||
+                                n_bottom.getContent() == CONTENT_GRASS ||
+                                n_bottom.getContent() == CONTENT_GRASS_FOOTSTEPS ||
+                                n_bottom.getContent() == CONTENT_SAND))
+                        {
+                            n.setContent(CONTENT_WATERMELON_GROWING_VINE);
+                            m_map->addNodeWithEvent(p, n);
+                        }
+                    }
+                    else if(myrand_range(0, 1)) // will berry
+                    {
+                        s16 xdir = myrand_range(-1, 1);
+                        s16 zdir = myrand_range(-1, 1);
+                        MapNode n_side = block->getNodeNoEx(p0+v3s16(xdir,0,zdir));
+                        if(n_side.getContent() == CONTENT_WATERMELON_GROWING_VINE && (
+                                n_bottom.getContent() == CONTENT_MUD ||
+                                n_bottom.getContent() == CONTENT_GRASS ||
+                                n_bottom.getContent() == CONTENT_GRASS_FOOTSTEPS ||
+                                n_bottom.getContent() == CONTENT_SAND))
+                        {
+                            n.setContent(CONTENT_WATERMELON);
+                            m_map->addNodeWithEvent(p, n);
+                        }
+                    }
+                }
+                // Growing vines periodicaly stops to grow
+                if(n.getContent() == CONTENT_WATERMELON_GROWING_VINE)
+                {
+                    if(!myrand_range(0,2))
+                    {
+                        n.setContent(CONTENT_WATERMELON_VINE);
+                        m_map->addNodeWithEvent(p, n);
+                    }
+                }
+				/*
 					Rats spawn around regular trees
 				*/
 				if(n.getContent() == CONTENT_TREE ||

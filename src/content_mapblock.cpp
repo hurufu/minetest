@@ -1011,7 +1011,7 @@ void mapblock_mesh_generate_special(MeshMakeData *data,
 				collector.append(material_papyrus, vertices, 4, indices, 6);
 			}
 		}
-		else if(n.getContent() == CONTENT_WATERMELON_VINE)
+		else if(n.getContent() == CONTENT_WATERMELON_VINE || n.getContent() == CONTENT_WATERMELON_GROWING_VINE)
         {
             u8 l = decode_light(undiminish_light(n.getLightBlend(data->m_daynight_ratio)));
             video::SColor c = MapBlock_LightColor(255, l);

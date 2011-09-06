@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 void content_mapnode_init();
 
-extern content_t trans_table_19[23][2];
+extern content_t trans_table_19[25][2];
 
 MapNode mapnode_translate_from_internal(MapNode n_from, u8 version);
 MapNode mapnode_translate_to_internal(MapNode n_from, u8 version);
@@ -85,6 +85,8 @@ MapNode mapnode_translate_to_internal(MapNode n_from, u8 version);
 #define CONTENT_NC_RB 0x818
 #define CONTENT_WATERMELON 0x819 // 31
 #define CONTENT_WATERMELON_VINE 0x81a // 32
+#define CONTENT_WATERMELON_SPROUT 0x81b // 34
+#define CONTENT_WATERMELON_GROWING_VINE 0x81c // 33
 
 #endif
 
